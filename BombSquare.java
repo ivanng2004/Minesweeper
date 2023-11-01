@@ -5,61 +5,69 @@ public class BombSquare extends GameSquare
 	private boolean thisSquareHasBomb = false;
 	public static final int MINE_PROBABILITY = 10;
 	private int number=0;
-	private BombSquare[][] s;
 	public BombSquare(int x, int y, GameBoard board)
 	{
 		super(x, y, "images/blank.png", board);
 
 		Random r = new Random();
-		thisSquareHasBomb = (r.nextInt(MINE_PROBABILITY) == 0);
+		
+		thisSquareHasBomb = (r.nextInt(MINE_PROBABILITY)== 0);
 	}
-	public void surroundBombSquares(int xLocation,int yLocation){
-		for(int j=0;j<board.getHeight();j++){
-			for(int i=0;i< board.getWidth();i++){
-				s[i][j] = (BombSquare) board.getSquareAt(i,j);
-			}
+	
+	public void getBombSquare(){
+		if(this.thisSquareHasBomb) {
+			this.setImage("images/bomb.png");
 		}
+	}
+
+	public void surroundBombSquares(){
+		BombSquare s;
 		//search surrounding squares
-		if(!this.thisSquareHasBomb) {
-			for (int j = this.yLocation - 1; j <= j + 2; j++) {
-				if(j<0)j++;
-				else if(j>= board.getHeight()) j--;
-				for (int i = this.xLocation - 1; i <= i + 2; i++) {
-					if(i<0)i++;
-					else if(i>= board.getWidth())i--;
-					if (board.getSquareAt(i, j) != null) {
-						s[i][j] = (BombSquare) board.getSquareAt(i,j);
-						if(s[i][j].thisSquareHasBomb==true) this.number++;
-					}
+		for (int j = this.yLocation - 1; j <= this.yLocation + 2; j++) {
+			for (int i = this.xLocation - 1; i <= this.xLocation + 2; i++) {
+				if (board.getSquareAt(i,j)!= null && (i!=this.xLocation && j!=this.yLocation)) {
+					s = (BombSquare) board.getSquareAt(i,j);
+					if(s.thisSquareHasBomb) this.number++;
 				}
 			}
-		}
+		}	
 	}
+	/**
+		public void expandEmptySpace(){
+
+		}
+	*/
+
 	public void clicked()
 	{
 		//Set random bombs on a game board
-		if(this.thisSquareHasBomb) {this.setImage("images/bomb.png");}
-		else {
-			//surroundBombSquares(this.xLocation,this.yLocation);
+		getBombSquare();
+		if(!this.thisSquareHasBomb){
+			this.surroundBombSquares();
 			switch (this.number) {
 				case 1:
-					board.getSquareAt(this.xLocation, this.yLocation).setImage("images/1.png");
+					this.setImage("images/1.png");
 				case 2:
-					board.getSquareAt(this.xLocation, this.yLocation).setImage("images/2.png");
+					this.setImage("images/2.png");
 				case 3:
-					board.getSquareAt(this.xLocation, this.yLocation).setImage("images/3.png");
+					this.setImage("images/3.png");
 				case 4:
-					board.getSquareAt(this.xLocation, this.yLocation).setImage("images/4.png");
+					this.setImage("images/4.png");
 				case 5:
-					board.getSquareAt(this.xLocation, this.yLocation).setImage("images/5.png");
+					this.setImage("images/5.png");
 				case 6:
-					board.getSquareAt(this.xLocation, this.yLocation).setImage("images/6.png");
+					this.setImage("images/6.png");
 				case 7:
-					board.getSquareAt(this.xLocation, this.yLocation).setImage("images/7.png");
+					this.setImage("images/7.png");
 				case 8:
-					board.getSquareAt(this.xLocation, this.yLocation).setImage("images/8.png");
+					this.setImage("images/8.png");
+				case 0:
+					this.setImage("images/0.png");
+					//expandEmptySpace();
 			}
+			number=0;
 		}
+		
 
 
 	}
